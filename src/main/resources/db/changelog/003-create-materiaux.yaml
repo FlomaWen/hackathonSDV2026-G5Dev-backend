@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-materiaux
+      author: hackathon
+      changes:
+        - createTable:
+            tableName: materiaux
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nom
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: categorie
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: facteur_emission
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unite
+                  type: varchar(50)
+                  defaultValue: kgCO2e/tonne
+                  constraints:
+                    nullable: false
+              - column:
+                  name: source
+                  type: varchar(100)
+                  defaultValue: ADEME
+              - column:
+                  name: description
+                  type: varchar(500)

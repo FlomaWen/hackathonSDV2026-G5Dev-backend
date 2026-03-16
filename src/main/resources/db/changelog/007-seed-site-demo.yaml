@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-seed-site-demo
+      author: hackathon
+      comment: "Données de démonstration - Site Capgemini Rennes (cahier des charges)"
+      changes:
+        # Utilisateur demo
+        # password = "demo1234" hashé en BCrypt
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "demo@hackathon.fr" }
+              - column: { name: password, value: "$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy" }
+              - column: { name: first_name, value: "Demo" }
+              - column: { name: last_name, value: "User" }
+              - column: { name: role, value: "ADMIN" }
+
+        # Site Capgemini Rennes
+        - insert:
+            tableName: sites
+            columns:
+              - column: { name: nom, value: "Capgemini Rennes" }
+              - column: { name: adresse, value: "Rennes, Bretagne" }
+              - column: { name: ville, value: "Rennes" }
+              - column: { name: surface_totale, valueNumeric: 11771 }
+              - column: { name: parking_sous_dalle, valueNumeric: 41 }
+              - column: { name: parking_sous_sol, valueNumeric: 184 }
+              - column: { name: parking_aerien, valueNumeric: 83 }
+              - column: { name: consommation_energetique_mwh, valueNumeric: 1840 }
+              - column: { name: nombre_employes, valueNumeric: 1800 }
+              - column: { name: nombre_postes_travail, valueNumeric: 1037 }
+              - column: { name: user_id, valueNumeric: 1 }
+
+        # Matériaux estimés pour un bâtiment tertiaire de ~12000m2
+        # (estimations réalistes pour un immeuble de bureaux)
+        - insert:
+            tableName: site_materiaux
+            columns:
+              - column: { name: site_id, valueNumeric: 1 }
+              - column: { name: materiau_id, valueNumeric: 1 }  # Béton
+              - column: { name: quantite, valueNumeric: 8500 }
+              - column: { name: unite_quantite, value: "tonnes" }
+        - insert:
+            tableName: site_materiaux
+            columns:
+              - column: { name: site_id, valueNumeric: 1 }
+              - column: { name: materiau_id, valueNumeric: 2 }  # Acier
+              - column: { name: quantite, valueNumeric: 850 }
+              - column: { name: unite_quantite, value: "tonnes" }
+        - insert:
+            tableName: site_materiaux
+            columns:
+              - column: { name: site_id, valueNumeric: 1 }
+              - column: { name: materiau_id, valueNumeric: 3 }  # Verre
+              - column: { name: quantite, valueNumeric: 180 }
+              - column: { name: unite_quantite, value: "tonnes" }
+        - insert:
+            tableName: site_materiaux
+            columns:
+              - column: { name: site_id, valueNumeric: 1 }
+              - column: { name: materiau_id, valueNumeric: 5 }  # Aluminium
+              - column: { name: quantite, valueNumeric: 45 }
+              - column: { name: unite_quantite, value: "tonnes" }

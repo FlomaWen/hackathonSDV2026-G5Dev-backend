@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.env
+
+.idea/
+*.iml
+.vscode/
+
+target/
+*.jar
+*.class
+
+.DS_Store
+Thumbs.db

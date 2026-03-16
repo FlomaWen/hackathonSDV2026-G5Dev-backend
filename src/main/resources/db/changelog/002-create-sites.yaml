@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-sites
+      author: hackathon
+      changes:
+        - createTable:
+            tableName: sites
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nom
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: adresse
+                  type: varchar(500)
+              - column:
+                  name: ville
+                  type: varchar(100)
+              - column:
+                  name: surface_totale
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parking_sous_dalle
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: parking_sous_sol
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: parking_aerien
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: consommation_energetique_mwh
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nombre_employes
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nombre_postes_travail
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sites_user
+                    references: users(id)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+        - createIndex:
+            indexName: idx_sites_user_id
+            tableName: sites
+            columns:
+              - column:
+                  name: user_id
