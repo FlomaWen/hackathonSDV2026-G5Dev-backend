@@ -26,7 +26,7 @@ public class CalculController {
 
     @PostMapping("/calcul")
     public ResponseEntity<CalculResponse> calculer(
-            @PathVariable Long siteId,
+            @PathVariable("siteId") Long siteId,
             @AuthenticationPrincipal User user
     ) {
         Site site = siteService.findByIdAndUser(siteId, user);
@@ -36,7 +36,7 @@ public class CalculController {
 
     @GetMapping("/historique")
     public ResponseEntity<List<CalculResponse>> historique(
-            @PathVariable Long siteId,
+            @PathVariable("siteId") Long siteId,
             @AuthenticationPrincipal User user
     ) {
         siteService.findByIdAndUser(siteId, user);
@@ -48,7 +48,7 @@ public class CalculController {
 
     @GetMapping("/kpis")
     public ResponseEntity<KpiResponse> kpis(
-            @PathVariable Long siteId,
+            @PathVariable("siteId") Long siteId,
             @AuthenticationPrincipal User user
     ) {
         siteService.findByIdAndUser(siteId, user);

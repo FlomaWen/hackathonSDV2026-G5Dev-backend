@@ -32,17 +32,49 @@ public class Site {
     @Column(name = "surface_totale", nullable = false)
     private Double surfaceTotale;
 
-    @Column(name = "parking_sous_dalle")
-    private Integer parkingSousDalle;
+    @Column(name = "nb_places")
+    @Builder.Default
+    private Integer nbPlaces = 0;
 
-    @Column(name = "parking_sous_sol")
-    private Integer parkingSousSol;
+    // Batiment
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type_batiment", length = 20)
+    @Builder.Default
+    private TypeBatiment typeBatiment = TypeBatiment.BUREAU;
 
-    @Column(name = "parking_aerien")
-    private Integer parkingAerien;
+    @Column(name = "duree_vie")
+    @Builder.Default
+    private Integer dureeVie = 50;
 
-    @Column(name = "consommation_energetique_mwh", nullable = false)
-    private Double consommationEnergetiqueMwh;
+    // Energie detaillee (kWh/an)
+    @Column(name = "e_elec")
+    private Double eElec;
+
+    @Column(name = "e_gaz")
+    private Double eGaz;
+
+    @Column(name = "e_fioul")
+    private Double eFioul;
+
+    @Column(name = "e_chaleur")
+    private Double eChaleur;
+
+    // Parking params
+    @Column(name = "part_thermique")
+    @Builder.Default
+    private Double partThermique = 0.80;
+
+    @Column(name = "part_electrique_parking")
+    @Builder.Default
+    private Double partElectriqueParking = 0.20;
+
+    @Column(name = "taux_occupation")
+    @Builder.Default
+    private Double tauxOccupation = 0.70;
+
+    @Column(name = "dist_moyenne_parking")
+    @Builder.Default
+    private Double distMoyenneParking = 5.0;
 
     @Column(name = "nombre_employes", nullable = false)
     private Integer nombreEmployes;
@@ -57,6 +89,10 @@ public class Site {
     @OneToMany(mappedBy = "site", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<SiteMateriau> siteMateriaux = new ArrayList<>();
+
+    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<EmployeGroupe> employeGroupes = new ArrayList<>();
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
@@ -73,5 +109,12 @@ public class Site {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = OffsetDateTime.now();
+    }
+
+    /**
+     * Total des places de parking (rétro-compatibilité avec ancien modèle).
+     */
+    public int getTotalPlaces() {
+        return nbPlaces != null ? nbPlaces : 0;
     }
 }

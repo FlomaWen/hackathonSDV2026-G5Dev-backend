@@ -24,7 +24,7 @@ public class MateriauController {
     }
 
     @GetMapping("/categorie/{categorie}")
-    public ResponseEntity<List<Materiau>> getByCategorie(@PathVariable String categorie) {
+    public ResponseEntity<List<Materiau>> getByCategorie(@PathVariable("categorie") String categorie) {
         return ResponseEntity.ok(materiauRepository.findByCategorie(categorie));
     }
 }

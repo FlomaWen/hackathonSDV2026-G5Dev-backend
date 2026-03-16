@@ -30,6 +30,7 @@ public class SiteController {
         Site site = siteService.create(
                 siteMapper.toEntity(request),
                 siteMapper.toMateriauMaps(request),
+                siteMapper.getEmployeRequests(request),
                 user
         );
         return ResponseEntity.ok(siteMapper.toResponse(site));
@@ -45,7 +46,7 @@ public class SiteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SiteResponse> getById(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal User user
     ) {
         Site site = siteService.findByIdAndUser(id, user);
@@ -54,7 +55,7 @@ public class SiteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<SiteResponse> update(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody SiteCreateRequest request,
             @AuthenticationPrincipal User user
     ) {
@@ -62,6 +63,7 @@ public class SiteController {
                 id,
                 siteMapper.toEntity(request),
                 siteMapper.toMateriauMaps(request),
+                siteMapper.getEmployeRequests(request),
                 user
         );
         return ResponseEntity.ok(siteMapper.toResponse(site));
@@ -69,7 +71,7 @@ public class SiteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal User user
     ) {
         siteService.delete(id, user);

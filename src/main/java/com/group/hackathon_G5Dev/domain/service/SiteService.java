@@ -1,11 +1,9 @@
 package com.group.hackathon_G5Dev.domain.service;
 
+import com.group.hackathon_G5Dev.api.dto.request.EmployeGroupeRequest;
 import com.group.hackathon_G5Dev.domain.exception.ResourceNotFoundException;
 import com.group.hackathon_G5Dev.domain.exception.UnauthorizedException;
-import com.group.hackathon_G5Dev.domain.model.Materiau;
-import com.group.hackathon_G5Dev.domain.model.Site;
-import com.group.hackathon_G5Dev.domain.model.SiteMateriau;
-import com.group.hackathon_G5Dev.domain.model.User;
+import com.group.hackathon_G5Dev.domain.model.*;
 import com.group.hackathon_G5Dev.persistence.repository.MateriauRepository;
 import com.group.hackathon_G5Dev.persistence.repository.SiteRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,30 +34,41 @@ public class SiteService {
     }
 
     @Transactional
-    public Site create(Site site, List<Map<String, Object>> materiaux, User user) {
+    public Site create(Site site, List<Map<String, Object>> materiaux, List<EmployeGroupeRequest> employes, User user) {
         site.setUser(user);
         addMateriaux(site, materiaux);
+        addEmployeGroupes(site, employes);
         return siteRepository.save(site);
     }
 
     @Transactional
-    public Site update(Long siteId, Site updated, List<Map<String, Object>> materiaux, User user) {
+    public Site update(Long siteId, Site updated, List<Map<String, Object>> materiaux, List<EmployeGroupeRequest> employes, User user) {
         Site site = findByIdAndUser(siteId, user);
 
         site.setNom(updated.getNom());
         site.setAdresse(updated.getAdresse());
         site.setVille(updated.getVille());
         site.setSurfaceTotale(updated.getSurfaceTotale());
-        site.setParkingSousDalle(updated.getParkingSousDalle());
-        site.setParkingSousSol(updated.getParkingSousSol());
-        site.setParkingAerien(updated.getParkingAerien());
-        site.setConsommationEnergetiqueMwh(updated.getConsommationEnergetiqueMwh());
+        site.setNbPlaces(updated.getNbPlaces());
+        site.setTypeBatiment(updated.getTypeBatiment());
+        site.setDureeVie(updated.getDureeVie());
+        site.setEElec(updated.getEElec());
+        site.setEGaz(updated.getEGaz());
+        site.setEFioul(updated.getEFioul());
+        site.setEChaleur(updated.getEChaleur());
+        site.setPartThermique(updated.getPartThermique());
+        site.setPartElectriqueParking(updated.getPartElectriqueParking());
+        site.setTauxOccupation(updated.getTauxOccupation());
+        site.setDistMoyenneParking(updated.getDistMoyenneParking());
         site.setNombreEmployes(updated.getNombreEmployes());
         site.setNombrePostesTravail(updated.getNombrePostesTravail());
 
         site.getSiteMateriaux().clear();
+        site.getEmployeGroupes().clear();
         siteRepository.saveAndFlush(site);
+
         addMateriaux(site, materiaux);
+        addEmployeGroupes(site, employes);
 
         return siteRepository.save(site);
     }
@@ -88,6 +97,32 @@ public class SiteService {
                     .build();
 
             site.getSiteMateriaux().add(siteMateriau);
+        }
+    }
+
+    private void addEmployeGroupes(Site site, List<EmployeGroupeRequest> employes) {
+        if (employes == null) return;
+
+        for (EmployeGroupeRequest req : employes) {
+            EmployeGroupe groupe = EmployeGroupe.builder()
+                    .site(site)
+                    .nb(req.nb())
+                    .modeTravail(req.modeTravail())
+                    .joursSite(req.joursSite())
+                    .build();
+
+            if (req.transports() != null) {
+                for (var tr : req.transports()) {
+                    TransportEmploye transport = TransportEmploye.builder()
+                            .employeGroupe(groupe)
+                            .mode(tr.mode())
+                            .distance(tr.distance() != null ? tr.distance() : 12.0)
+                            .build();
+                    groupe.getTransports().add(transport);
+                }
+            }
+
+            site.getEmployeGroupes().add(groupe);
         }
     }
 }

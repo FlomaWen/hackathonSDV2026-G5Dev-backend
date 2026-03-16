@@ -5,8 +5,8 @@ spring:
   # === NEON DATABASE ===
   datasource:
     url: jdbc:postgresql://ep-purple-night-agj7d7ik-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
-    username: ${NEON_DB_USER}
-    password: ${NEON_DB_PASSWORD}
+    username: ${NEON_DB_USER:neon_user}
+    password: ${NEON_DB_PASSWORD:neon_password}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
@@ -33,7 +33,7 @@ spring:
 application:
   security:
     jwt:
-      secret-key: ${JWT_SECRET}
+      secret-key: ${JWT_SECRET:dev-secret-key-very-long-for-testing-purposes-only}
       expiration: 86400000
 
 # === SERVER ===

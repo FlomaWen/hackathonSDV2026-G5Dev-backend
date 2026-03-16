@@ -30,7 +30,7 @@ public class ComparaisonController {
 
     @GetMapping
     public ResponseEntity<CompareResponse> comparer(
-            @RequestParam List<Long> siteIds,
+            @RequestParam("siteIds") List<Long> siteIds,
             @AuthenticationPrincipal User user
     ) {
         List<KpiResponse> kpis = siteIds.stream()
@@ -42,17 +42,17 @@ public class ComparaisonController {
                 .toList();
 
         double co2TotalMoyen = arrondir(kpis.stream()
-                .mapToDouble(KpiResponse::co2Total)
+                .mapToDouble(KpiResponse::ecTotal)
                 .average()
                 .orElse(0));
 
         double co2ParM2Moyen = arrondir(kpis.stream()
-                .mapToDouble(KpiResponse::co2ParM2)
+                .mapToDouble(KpiResponse::ecParM2)
                 .average()
                 .orElse(0));
 
         double co2ParEmployeMoyen = arrondir(kpis.stream()
-                .mapToDouble(KpiResponse::co2ParEmploye)
+                .mapToDouble(KpiResponse::ecParEmploye)
                 .average()
                 .orElse(0));
 

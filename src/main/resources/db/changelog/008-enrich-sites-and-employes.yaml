@@ -1,0 +1,161 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-enrich-sites
+      author: hackathon
+      comment: "Enrichir le modèle site : type bâtiment, énergie détaillée, parking, employés"
+      changes:
+        # Nouveaux champs sur sites
+        - addColumn:
+            tableName: sites
+            columns:
+              - column:
+                  name: nb_places
+                  type: int
+                  defaultValueNumeric: 0
+              - column:
+                  name: type_batiment
+                  type: varchar(20)
+                  defaultValue: "BUREAU"
+              - column:
+                  name: duree_vie
+                  type: int
+                  defaultValueNumeric: 50
+              - column:
+                  name: e_elec
+                  type: double
+              - column:
+                  name: e_gaz
+                  type: double
+              - column:
+                  name: e_fioul
+                  type: double
+              - column:
+                  name: e_chaleur
+                  type: double
+              - column:
+                  name: part_thermique
+                  type: double
+                  defaultValueNumeric: 0.80
+              - column:
+                  name: part_electrique_parking
+                  type: double
+                  defaultValueNumeric: 0.20
+              - column:
+                  name: taux_occupation
+                  type: double
+                  defaultValueNumeric: 0.70
+              - column:
+                  name: dist_moyenne_parking
+                  type: double
+                  defaultValueNumeric: 5.0
+
+        # Migrer nb_places depuis les anciennes colonnes parking
+        - sql:
+            sql: >
+              UPDATE sites SET nb_places = COALESCE(parking_sous_dalle, 0)
+                + COALESCE(parking_sous_sol, 0) + COALESCE(parking_aerien, 0)
+
+        # Table employe_groupes
+        - createTable:
+            tableName: employe_groupes
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: site_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_employe_groupes_site
+                    references: sites(id)
+                    deleteCascade: true
+              - column:
+                  name: nb
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mode_travail
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: jours_site
+                  type: int
+
+        - createIndex:
+            indexName: idx_employe_groupes_site
+            tableName: employe_groupes
+            columns:
+              - column:
+                  name: site_id
+
+        # Table transport_employes
+        - createTable:
+            tableName: transport_employes
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: employe_groupe_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_transport_employe_groupe
+                    references: employe_groupes(id)
+                    deleteCascade: true
+              - column:
+                  name: mode
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: distance
+                  type: double
+                  defaultValueNumeric: 12.0
+
+        - createIndex:
+            indexName: idx_transport_employes_groupe
+            tableName: transport_employes
+            columns:
+              - column:
+                  name: employe_groupe_id
+
+  - changeSet:
+      id: 008-drop-old-columns
+      author: hackathon
+      comment: "Supprimer les anciennes colonnes parking et consommation"
+      changes:
+        - dropColumn:
+            tableName: sites
+            columnName: parking_sous_dalle
+        - dropColumn:
+            tableName: sites
+            columnName: parking_sous_sol
+        - dropColumn:
+            tableName: sites
+            columnName: parking_aerien
+        - dropColumn:
+            tableName: sites
+            columnName: consommation_energetique_mwh
+
+  - changeSet:
+      id: 008-seed-demo-nb-places
+      author: hackathon
+      comment: "Mettre à jour le site demo avec nb_places et énergie détaillée"
+      validCheckSum: ANY
+      changes:
+        - sql:
+            sql: >
+              UPDATE sites SET nb_places = 308, type_batiment = 'BUREAU', e_elec = 1840000
+              WHERE nom = 'Capgemini Rennes'

@@ -1,5 +1,6 @@
 package com.group.hackathon_G5Dev.api.dto.request;
 
+import com.group.hackathon_G5Dev.domain.model.TypeBatiment;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,26 +21,37 @@ public record SiteCreateRequest(
         @Positive(message = "La surface totale doit être positive")
         Double surfaceTotale,
 
-        @PositiveOrZero(message = "Le nombre de parkings sous dalle doit être positif ou nul")
-        Integer parkingSousDalle,
+        @PositiveOrZero
+        Integer nbPlaces,
 
-        @PositiveOrZero(message = "Le nombre de parkings sous sol doit être positif ou nul")
-        Integer parkingSousSol,
+        // Batiment (optionnel)
+        TypeBatiment typeBatiment,
+        Integer dureeVie,
 
-        @PositiveOrZero(message = "Le nombre de parkings aériens doit être positif ou nul")
-        Integer parkingAerien,
+        // Materiaux (optionnel, estimés depuis superficie si absent)
+        @Valid
+        List<MateriauQuantiteRequest> materiaux,
 
-        @NotNull(message = "La consommation énergétique est obligatoire")
-        @Positive(message = "La consommation énergétique doit être positive")
-        Double consommationEnergetiqueMwh,
+        // Energie detaillee en kWh/an (optionnel, estimée depuis superficie si absent)
+        Double eElec,
+        Double eGaz,
+        Double eFioul,
+        Double eChaleur,
+
+        // Employes (liste de groupes)
+        @Valid
+        List<EmployeGroupeRequest> employes,
+
+        // Parking (optionnel)
+        Double partThermique,
+        Double partElectriqueParking,
+        Double tauxOccupation,
+        Double distMoyenneParking,
 
         @NotNull(message = "Le nombre d'employés est obligatoire")
         @Positive(message = "Le nombre d'employés doit être positif")
         Integer nombreEmployes,
 
-        @PositiveOrZero(message = "Le nombre de postes de travail doit être positif ou nul")
-        Integer nombrePostesTravail,
-
-        @Valid
-        List<MateriauQuantiteRequest> materiaux
+        @PositiveOrZero
+        Integer nombrePostesTravail
 ) {}
