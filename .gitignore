@@ -33,6 +33,7 @@ build/
 .vscode/
 
 .env
+http/http-client.env.json
 
 .idea/
 *.iml

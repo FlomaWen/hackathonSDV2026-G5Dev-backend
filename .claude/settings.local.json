@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /c/Users/Florian/Desktop/DEV/hackathon-G5Dev && mvn compile 2>&1 | tail -80)",
+      "Bash(find:*)",
+      "Bash(cd:*)",
+      "Bash(docker ps:*)",
+      "Bash(git rm:*)"
+    ]
+  }
+}
