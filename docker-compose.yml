@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # === BACKEND SPRING BOOT ===
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: carbone
+      POSTGRES_USER: carbone_user
+      POSTGRES_PASSWORD: carbone_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    profiles:
+      - local
+
+volumes:
+  postgres_data:

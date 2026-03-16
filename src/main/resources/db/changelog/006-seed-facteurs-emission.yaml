@@ -1,0 +1,108 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-seed-facteurs-emission
+      author: hackathon
+      comment: "Facteurs d'émission ADEME - Base Carbone"
+      changes:
+        # === MATERIAUX DE CONSTRUCTION ===
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Béton" }
+              - column: { name: categorie, value: "construction" }
+              - column: { name: facteur_emission, valueNumeric: 230 }
+              - column: { name: unite, value: "kgCO2e/tonne" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Béton prêt à l'emploi, moyenne France" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Acier" }
+              - column: { name: categorie, value: "construction" }
+              - column: { name: facteur_emission, valueNumeric: 1950 }
+              - column: { name: unite, value: "kgCO2e/tonne" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Acier de construction, moyenne" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Verre" }
+              - column: { name: categorie, value: "construction" }
+              - column: { name: facteur_emission, valueNumeric: 600 }
+              - column: { name: unite, value: "kgCO2e/tonne" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Verre plat, vitrage" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Bois" }
+              - column: { name: categorie, value: "construction" }
+              - column: { name: facteur_emission, valueNumeric: 40 }
+              - column: { name: unite, value: "kgCO2e/tonne" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Bois de construction (résineux), hors séquestration" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Aluminium" }
+              - column: { name: categorie, value: "construction" }
+              - column: { name: facteur_emission, valueNumeric: 8600 }
+              - column: { name: unite, value: "kgCO2e/tonne" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Aluminium primaire, moyenne mondiale" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Cuivre" }
+              - column: { name: categorie, value: "construction" }
+              - column: { name: facteur_emission, valueNumeric: 3500 }
+              - column: { name: unite, value: "kgCO2e/tonne" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Cuivre (câblage, plomberie)" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Isolation laine de verre" }
+              - column: { name: categorie, value: "construction" }
+              - column: { name: facteur_emission, valueNumeric: 850 }
+              - column: { name: unite, value: "kgCO2e/tonne" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Laine de verre pour isolation" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "PVC" }
+              - column: { name: categorie, value: "construction" }
+              - column: { name: facteur_emission, valueNumeric: 2800 }
+              - column: { name: unite, value: "kgCO2e/tonne" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "PVC (canalisations, menuiseries)" }
+
+        # === ENERGIE ===
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Électricité France" }
+              - column: { name: categorie, value: "energie" }
+              - column: { name: facteur_emission, valueNumeric: 52 }
+              - column: { name: unite, value: "kgCO2e/MWh" }
+              - column: { name: source, value: "ADEME Base Carbone 2024" }
+              - column: { name: description, value: "Mix électrique français moyen" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Gaz naturel" }
+              - column: { name: categorie, value: "energie" }
+              - column: { name: facteur_emission, valueNumeric: 227 }
+              - column: { name: unite, value: "kgCO2e/MWh" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Gaz naturel (chauffage)" }
+        - insert:
+            tableName: materiaux
+            columns:
+              - column: { name: nom, value: "Fioul domestique" }
+              - column: { name: categorie, value: "energie" }
+              - column: { name: facteur_emission, valueNumeric: 324 }
+              - column: { name: unite, value: "kgCO2e/MWh" }
+              - column: { name: source, value: "ADEME Base Carbone" }
+              - column: { name: description, value: "Fioul domestique (chauffage)" }

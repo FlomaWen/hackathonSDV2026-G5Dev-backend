@@ -1,0 +1,69 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-calcul-carbone
+      author: hackathon
+      changes:
+        - createTable:
+            tableName: calcul_carbone
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: site_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_calcul_carbone_site
+                    references: sites(id)
+                    deleteCascade: true
+              - column:
+                  name: date_calcul
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: co2_construction
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: co2_exploitation
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: co2_total
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: co2_par_m2
+                  type: double
+              - column:
+                  name: co2_par_employe
+                  type: double
+              - column:
+                  name: detail_par_categorie
+                  type: jsonb
+              - column:
+                  name: annee_reference
+                  type: int
+        - createIndex:
+            indexName: idx_calcul_carbone_site
+            tableName: calcul_carbone
+            columns:
+              - column:
+                  name: site_id
+        - createIndex:
+            indexName: idx_calcul_carbone_date
+            tableName: calcul_carbone
+            columns:
+              - column:
+                  name: date_calcul
+                  descending: true

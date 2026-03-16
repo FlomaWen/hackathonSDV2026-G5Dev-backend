@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-site-materiaux
+      author: hackathon
+      changes:
+        - createTable:
+            tableName: site_materiaux
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: site_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_site_materiaux_site
+                    references: sites(id)
+                    deleteCascade: true
+              - column:
+                  name: materiau_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_site_materiaux_materiau
+                    references: materiaux(id)
+              - column:
+                  name: quantite
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unite_quantite
+                  type: varchar(30)
+                  defaultValue: tonnes
+        - createIndex:
+            indexName: idx_site_materiaux_site
+            tableName: site_materiaux
+            columns:
+              - column:
+                  name: site_id
+        - addUniqueConstraint:
+            tableName: site_materiaux
+            columnNames: site_id, materiau_id
+            constraintName: uk_site_materiau
