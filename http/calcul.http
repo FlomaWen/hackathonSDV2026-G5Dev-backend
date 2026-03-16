@@ -1,0 +1,11 @@
+### Lancer le calcul carbone pour un site
+POST http://localhost:8080/api/sites/2/calcul
+Authorization: Bearer {{token}}
+
+### Historique des calculs
+GET http://localhost:8080/api/sites/1/historique
+Authorization: Bearer {{token}}
+
+### KPIs du dernier calcul
+GET http://localhost:8080/api/sites/1/kpis
+Authorization: Bearer {{token}}

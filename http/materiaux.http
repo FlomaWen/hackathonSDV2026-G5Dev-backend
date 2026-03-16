@@ -1,0 +1,8 @@
+### Lister tous les matériaux (public)
+GET http://localhost:8080/api/materiaux
+
+### Matériaux par catégorie - construction
+GET http://localhost:8080/api/materiaux/categorie/construction
+
+### Matériaux par catégorie - énergie
+GET http://localhost:8080/api/materiaux/categorie/energie

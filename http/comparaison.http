@@ -1,0 +1,3 @@
+### Comparer plusieurs sites
+GET http://localhost:8080/api/comparaison?siteIds=1,2
+Authorization: Bearer {{token}}

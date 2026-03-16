@@ -1,0 +1,59 @@
+### Créer un site
+POST http://localhost:8080/api/sites
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nom": "Bureau bordeaux",
+  "adresse": "12 rue de leybardie",
+  "ville": "Bordeaux",
+  "surfaceTotale": 5000,
+  "parkingSousDalle": 20,
+  "parkingSousSol": 50,
+  "parkingAerien": 30,
+  "consommationEnergetiqueMwh": 900,
+  "nombreEmployes": 500,
+  "nombrePostesTravail": 350,
+  "materiaux": [
+    { "materiauId": 1, "quantite": 4000 },
+    { "materiauId": 2, "quantite": 400 },
+    { "materiauId": 3, "quantite": 90 },
+    { "materiauId": 4, "quantite": 200 }
+  ]
+}
+
+### Lister mes sites
+GET http://localhost:8080/api/sites
+Authorization: Bearer {{token}}
+
+### Récupérer un site par ID
+GET http://localhost:8080/api/sites/3
+Authorization: Bearer {{token}}
+
+### Modifier un site
+PUT http://localhost:8080/api/sites/2
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nom": "Capgemini Rennes (modifié)",
+  "adresse": "Rennes, Bretagne",
+  "ville": "Rennes",
+  "surfaceTotale": 12000,
+  "parkingSousDalle": 41,
+  "parkingSousSol": 184,
+  "parkingAerien": 83,
+  "consommationEnergetiqueMwh": 1840,
+  "nombreEmployes": 1800,
+  "nombrePostesTravail": 1037,
+  "materiaux": [
+    { "materiauId": 1, "quantite": 8500 },
+    { "materiauId": 2, "quantite": 850 },
+    { "materiauId": 3, "quantite": 180 },
+    { "materiauId": 5, "quantite": 45 }
+  ]
+}
+
+### Supprimer un site
+DELETE http://localhost:8080/api/sites/2
+Authorization: Bearer {{token}}
