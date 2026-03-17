@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller CRUD pour la gestion des sites physiques d'un utilisateur.
+ */
 @RestController
 @RequestMapping("/api/sites")
 @RequiredArgsConstructor

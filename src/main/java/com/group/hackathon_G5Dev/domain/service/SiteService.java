@@ -13,6 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service CRUD pour les sites physiques.
+ * Gère la création, modification et suppression des sites avec leurs
+ * matériaux de construction et groupes d'employés associés.
+ */
 @Service
 @RequiredArgsConstructor
 public class SiteService {

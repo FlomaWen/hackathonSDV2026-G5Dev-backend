@@ -6,5 +6,14 @@ public record CompareResponse(
         List<KpiResponse> sites,
         Double co2TotalMoyen,
         Double co2ParM2Moyen,
-        Double co2ParEmployeMoyen
-) {}
+        Double co2ParEmployeMoyen,
+        SiteRanking meilleurSite,
+        SiteRanking pireSite
+) {
+    public record SiteRanking(
+            Long siteId,
+            String siteNom,
+            Double ecParM2,
+            Double ecartVsMoyennePct
+    ) {}
+}

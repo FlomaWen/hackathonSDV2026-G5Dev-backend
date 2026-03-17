@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-fix-facteurs-emission
+      author: hackathon
+      comment: "Aligner les facteurs d'émission sur le cahier des charges INIES/RE2020"
+      changes:
+        # Béton : 230 -> 200 kgCO2e/t (INIES C25/30)
+        - update:
+            tableName: materiaux
+            columns:
+              - column: { name: facteur_emission, valueNumeric: 200 }
+              - column: { name: description, value: "Béton C25/30, moyenne France (INIES)" }
+            where: nom = 'Béton'
+
+        # Acier : 1950 -> 1890 kgCO2e/t (INIES laminé à chaud)
+        - update:
+            tableName: materiaux
+            columns:
+              - column: { name: facteur_emission, valueNumeric: 1890 }
+              - column: { name: description, value: "Acier laminé à chaud (INIES)" }
+            where: nom = 'Acier'
+
+        # Verre : 600 -> 870 kgCO2e/t (INIES verre plat)
+        - update:
+            tableName: materiaux
+            columns:
+              - column: { name: facteur_emission, valueNumeric: 870 }
+              - column: { name: description, value: "Verre plat, vitrage (INIES)" }
+            where: nom = 'Verre'
+
+        # Bois : 40 -> -750 kgCO2e/t (INIES bois massif/CLT, puits carbone)
+        - update:
+            tableName: materiaux
+            columns:
+              - column: { name: facteur_emission, valueNumeric: -750 }
+              - column: { name: description, value: "Bois massif / CLT, puits carbone temporaire (INIES)" }
+            where: nom = 'Bois'

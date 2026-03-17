@@ -18,6 +18,11 @@ import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
+/**
+ * Service de génération du rapport PDF d'empreinte carbone.
+ * Utilise la charte graphique EcoTrack v1.0 (palette Vert Forêt / Noir Forêt)
+ * et inclut les KPIs, la répartition par poste et le benchmark sectoriel.
+ */
 @Service
 @RequiredArgsConstructor
 public class RapportPdfService {
