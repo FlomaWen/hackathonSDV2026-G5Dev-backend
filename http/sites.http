@@ -8,10 +8,11 @@ Authorization: Bearer {{token}}
   "adresse": "12 rue de leybardie",
   "ville": "Bordeaux",
   "surfaceTotale": 5000,
-  "parkingSousDalle": 20,
-  "parkingSousSol": 50,
-  "parkingAerien": 30,
-  "consommationEnergetiqueMwh": 900,
+  "nbPlaces": 100,
+  "typeBatiment": "BUREAU",
+  "dureeVie": 50,
+  "eElec": 900000,
+  "eGaz": 400000,
   "nombreEmployes": 500,
   "nombrePostesTravail": 350,
   "materiaux": [
@@ -19,6 +20,28 @@ Authorization: Bearer {{token}}
     { "materiauId": 2, "quantite": 400 },
     { "materiauId": 3, "quantite": 90 },
     { "materiauId": 4, "quantite": 200 }
+  ],
+  "employes": [
+    {
+      "nb": 350,
+      "modeTravail": "SUR_SITE",
+      "transports": [
+        { "mode": "VOITURE_THERMIQUE", "distance": 15 },
+        { "mode": "BUS", "distance": 10 }
+      ]
+    },
+    {
+      "nb": 100,
+      "modeTravail": "HYBRIDE",
+      "joursSite": 109,
+      "transports": [
+        { "mode": "TRAIN", "distance": 20 }
+      ]
+    },
+    {
+      "nb": 50,
+      "modeTravail": "REMOTE"
+    }
   ]
 }
 
@@ -40,10 +63,11 @@ Authorization: Bearer {{token}}
   "adresse": "Rennes, Bretagne",
   "ville": "Rennes",
   "surfaceTotale": 12000,
-  "parkingSousDalle": 41,
-  "parkingSousSol": 184,
-  "parkingAerien": 83,
-  "consommationEnergetiqueMwh": 1840,
+  "nbPlaces": 308,
+  "typeBatiment": "BUREAU",
+  "dureeVie": 50,
+  "eElec": 1840000,
+  "eGaz": 960000,
   "nombreEmployes": 1800,
   "nombrePostesTravail": 1037,
   "materiaux": [
@@ -51,6 +75,28 @@ Authorization: Bearer {{token}}
     { "materiauId": 2, "quantite": 850 },
     { "materiauId": 3, "quantite": 180 },
     { "materiauId": 5, "quantite": 45 }
+  ],
+  "employes": [
+    {
+      "nb": 1200,
+      "modeTravail": "SUR_SITE",
+      "transports": [
+        { "mode": "VOITURE_THERMIQUE", "distance": 18 },
+        { "mode": "METRO", "distance": 6 }
+      ]
+    },
+    {
+      "nb": 500,
+      "modeTravail": "HYBRIDE",
+      "joursSite": 109,
+      "transports": [
+        { "mode": "TRAIN", "distance": 30 }
+      ]
+    },
+    {
+      "nb": 100,
+      "modeTravail": "REMOTE"
+    }
   ]
 }
 
