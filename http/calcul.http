@@ -1,5 +1,5 @@
 ### Lancer le calcul carbone pour un site
-POST http://localhost:8080/api/sites/7/calcul
+POST http://localhost:8080/api/sites/14/calcul
 Authorization: Bearer {{token}}
 
 ### Historique des calculs
@@ -8,6 +8,10 @@ Authorization: Bearer {{token}}
 
 ### KPIs du dernier calcul
 GET http://localhost:8080/api/sites/1/kpis
+Authorization: Bearer {{token}}
+
+### Telecharger le rapport PDF
+GET http://localhost:8080/api/sites/14/rapport
 Authorization: Bearer {{token}}
 
 ### Creer un site complet avec employes et transports
