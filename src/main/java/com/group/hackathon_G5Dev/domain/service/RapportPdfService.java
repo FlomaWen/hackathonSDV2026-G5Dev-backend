@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +27,8 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class RapportPdfService {
+
+    private final RecommandationService recommandationService;
 
     // ══════════════════════════════════════════════════════════════
     // Palette EcoTrack — Charte Graphique v1.0
@@ -313,6 +316,127 @@ public class RapportPdfService {
                     detail.getOrDefault("ecart_total_pct", 0.0), 2);
 
             addSection(doc, "Benchmark sectoriel", benchTable);
+
+            // ══════════════════════════════════════════════════════════════
+            // SCORE D'ÉCO-MATURITÉ + PLAN D'ACTION RECOMMANDÉ
+            // ══════════════════════════════════════════════════════════════
+            RecommandationService.ResultatRecommandations resultat =
+                    recommandationService.generer(site.getId());
+
+            // --- Score d'éco-maturité ---
+            RecommandationService.ScoreEcoMaturite scoreMaturite = resultat.scoreEcoMaturite();
+
+            PdfPTable scoreTable = new PdfPTable(2);
+            scoreTable.setWidthPercentage(70);
+            scoreTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+            scoreTable.setSpacingAfter(10);
+            scoreTable.setWidths(new float[]{1, 3});
+            scoreTable.setKeepTogether(true);
+
+            // Badge score
+            Color scoreColor = getScoreColor(scoreMaturite.score());
+            PdfPCell scoreBadgeCell = new PdfPCell(new Phrase(String.valueOf(scoreMaturite.score()),
+                    new Font(Font.HELVETICA, 28, Font.BOLD, Color.WHITE)));
+            scoreBadgeCell.setBackgroundColor(scoreColor);
+            scoreBadgeCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            scoreBadgeCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            scoreBadgeCell.setPadding(12);
+            scoreBadgeCell.setBorderWidth(0);
+            scoreTable.addCell(scoreBadgeCell);
+
+            // Détail score
+            PdfPCell scoreDetailCell = new PdfPCell();
+            scoreDetailCell.setBorderWidth(0);
+            scoreDetailCell.setPadding(10);
+            scoreDetailCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            scoreDetailCell.setBackgroundColor(VERT_PALE);
+
+            scoreDetailCell.addElement(new Paragraph("Score d'eco-maturite",
+                    new Font(Font.HELVETICA, 8, Font.BOLD, VERT_NUIT)));
+            Paragraph niveauPara = new Paragraph(scoreMaturite.niveau() + " / 100",
+                    new Font(Font.HELVETICA, 12, Font.BOLD, VERT_FORET));
+            niveauPara.setSpacingBefore(2);
+            scoreDetailCell.addElement(niveauPara);
+
+            Map<String, Integer> detailScores = scoreMaturite.detailScores();
+            String scoreBreakdown = String.format("Classe %d/30  |  Mobilite %d/25  |  Energie %d/20  |  Materiaux %d/15  |  Benchmark %d/10",
+                    detailScores.getOrDefault("classeCarbone", 0),
+                    detailScores.getOrDefault("mobilite", 0),
+                    detailScores.getOrDefault("energie", 0),
+                    detailScores.getOrDefault("materiaux", 0),
+                    detailScores.getOrDefault("benchmark", 0));
+            scoreDetailCell.addElement(new Paragraph(scoreBreakdown, CAPTION_FONT));
+            scoreTable.addCell(scoreDetailCell);
+
+            addSection(doc, "Score d'eco-maturite", scoreTable);
+
+            // --- Plan d'action recommandé ---
+            List<RecommandationService.Recommandation> recos = resultat.recommandations();
+            if (!recos.isEmpty()) {
+                PdfPTable recoTable = new PdfPTable(4);
+                recoTable.setWidthPercentage(100);
+                recoTable.setSpacingAfter(8);
+                recoTable.setWidths(new float[]{3, 2, 1.5f, 1});
+                recoTable.setHeaderRows(1);
+
+                addTableHeader(recoTable, "Action recommandee");
+                addTableHeader(recoTable, "Gain estime", Element.ALIGN_RIGHT);
+                addTableHeader(recoTable, "Difficulte", Element.ALIGN_CENTER);
+                addTableHeader(recoTable, "Poste", Element.ALIGN_CENTER);
+
+                for (int i = 0; i < recos.size(); i++) {
+                    RecommandationService.Recommandation reco = recos.get(i);
+                    Color bg = i % 2 == 0 ? VERT_PALE : Color.WHITE;
+
+                    // Titre + description
+                    PdfPCell titleCell = new PdfPCell();
+                    titleCell.setBorderWidth(0);
+                    titleCell.setPadding(5);
+                    titleCell.setBackgroundColor(bg);
+                    titleCell.addElement(new Paragraph(reco.titre(), BODY_BOLD_FONT));
+                    Paragraph descPara = new Paragraph(reco.description(), CAPTION_FONT);
+                    descPara.setSpacingBefore(2);
+                    titleCell.addElement(descPara);
+                    recoTable.addCell(titleCell);
+
+                    // Gain estimé
+                    PdfPCell gainCell = new PdfPCell(new Phrase(
+                            formatKg(reco.gainEstimeKgCo2eAn()) + " kgCO2e/an",
+                            new Font(Font.HELVETICA, 8, Font.BOLD, SUCCES)));
+                    gainCell.setBorderWidth(0);
+                    gainCell.setPadding(5);
+                    gainCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    gainCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    gainCell.setBackgroundColor(bg);
+                    recoTable.addCell(gainCell);
+
+                    // Difficulté
+                    Color diffColor = switch (reco.difficulte()) {
+                        case "facile" -> SUCCES;
+                        case "moyen" -> ATTENTION;
+                        default -> ERREUR;
+                    };
+                    PdfPCell diffCell = new PdfPCell(new Phrase(reco.difficulte(),
+                            new Font(Font.HELVETICA, 8, Font.BOLD, diffColor)));
+                    diffCell.setBorderWidth(0);
+                    diffCell.setPadding(5);
+                    diffCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    diffCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    diffCell.setBackgroundColor(bg);
+                    recoTable.addCell(diffCell);
+
+                    // Poste
+                    PdfPCell posteCell = new PdfPCell(new Phrase(reco.poste(), BODY_FONT));
+                    posteCell.setBorderWidth(0);
+                    posteCell.setPadding(5);
+                    posteCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    posteCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    posteCell.setBackgroundColor(bg);
+                    recoTable.addCell(posteCell);
+                }
+
+                addSection(doc, "Plan d'action recommande", recoTable);
+            }
 
             // ══════════════════════════════════════════════════════════════
             // FOOTER — avec logo EcoTrack
@@ -609,6 +733,14 @@ public class RapportPdfService {
         ecartCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         ecartCell.setBackgroundColor(bg);
         table.addCell(ecartCell);
+    }
+
+    private Color getScoreColor(int score) {
+        if (score >= 80) return VERT_FORET;
+        if (score >= 60) return VERT_ECLAT;
+        if (score >= 40) return ATTENTION;
+        if (score >= 20) return new Color(240, 130, 20);
+        return ERREUR;
     }
 
     private Color getClasseColor(ClasseCarbone classe) {

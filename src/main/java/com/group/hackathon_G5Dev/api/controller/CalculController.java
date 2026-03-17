@@ -2,12 +2,14 @@ package com.group.hackathon_G5Dev.api.controller;
 
 import com.group.hackathon_G5Dev.api.dto.response.CalculResponse;
 import com.group.hackathon_G5Dev.api.dto.response.KpiResponse;
+import com.group.hackathon_G5Dev.api.dto.response.RecommandationResponse;
 import com.group.hackathon_G5Dev.api.mapper.CalculMapper;
 import com.group.hackathon_G5Dev.domain.model.CalculCarbone;
 import com.group.hackathon_G5Dev.domain.model.Site;
 import com.group.hackathon_G5Dev.domain.model.User;
 import com.group.hackathon_G5Dev.domain.service.CarboneCalculService;
 import com.group.hackathon_G5Dev.domain.service.RapportPdfService;
+import com.group.hackathon_G5Dev.domain.service.RecommandationService;
 import com.group.hackathon_G5Dev.domain.service.SiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +32,7 @@ public class CalculController {
     private final SiteService siteService;
     private final CalculMapper calculMapper;
     private final RapportPdfService rapportPdfService;
+    private final RecommandationService recommandationService;
 
     @PostMapping("/calcul")
     public ResponseEntity<CalculResponse> calculer(
@@ -61,6 +64,28 @@ public class CalculController {
         siteService.findByIdAndUser(siteId, user);
         CalculCarbone calcul = carboneCalculService.getDernierCalcul(siteId);
         return ResponseEntity.ok(calculMapper.toKpiResponse(calcul));
+    }
+
+    @GetMapping("/recommandations")
+    public ResponseEntity<RecommandationResponse> recommandations(
+            @PathVariable("siteId") Long siteId,
+            @AuthenticationPrincipal User user
+    ) {
+        siteService.findByIdAndUser(siteId, user);
+        RecommandationService.ResultatRecommandations resultat = recommandationService.generer(siteId);
+
+        List<RecommandationResponse.Recommandation> recos = resultat.recommandations().stream()
+                .map(r -> new RecommandationResponse.Recommandation(
+                        r.titre(), r.description(), r.gainEstimeKgCo2eAn(), r.difficulte(), r.poste()))
+                .toList();
+
+        RecommandationResponse.ScoreEcoMaturite score = new RecommandationResponse.ScoreEcoMaturite(
+                resultat.scoreEcoMaturite().score(),
+                resultat.scoreEcoMaturite().niveau(),
+                resultat.scoreEcoMaturite().detailScores()
+        );
+
+        return ResponseEntity.ok(new RecommandationResponse(recos, score));
     }
 
     @GetMapping("/rapport")
