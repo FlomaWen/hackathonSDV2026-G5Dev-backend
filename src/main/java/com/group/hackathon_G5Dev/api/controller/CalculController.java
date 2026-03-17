@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller pour le calcul carbone, l'historique, les KPIs et l'export PDF d'un site.
+ */
 @RestController
 @RequestMapping("/api/sites/{siteId}")
 @RequiredArgsConstructor

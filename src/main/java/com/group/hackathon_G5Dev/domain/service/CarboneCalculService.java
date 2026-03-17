@@ -15,6 +15,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service de calcul de l'empreinte carbone d'un site physique.
+ * <p>
+ * Implémente la formule : EC_total = EC_mat + EC_nrj + EC_mob + EC_park + EC_dech
+ * conformément au référentiel GHG Protocol (Scope 1, 2, 3) et aux facteurs
+ * d'émission de la Base Empreinte ADEME / INIES.
+ * <p>
+ * Les matériaux de construction sont amortis sur la durée de vie du bâtiment.
+ * L'énergie, la mobilité, le parking et les déchets sont calculés en kgCO2e/an.
+ */
 @Service
 @RequiredArgsConstructor
 public class CarboneCalculService {

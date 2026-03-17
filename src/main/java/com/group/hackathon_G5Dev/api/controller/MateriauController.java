@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller en lecture seule pour consulter les facteurs d'émission des matériaux.
+ * Les unités sont : kgCO2e/tonne (construction) et kgCO2e/MWh (énergie).
+ */
 @RestController
 @RequestMapping("/api/materiaux")
 @RequiredArgsConstructor

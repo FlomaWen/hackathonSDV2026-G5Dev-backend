@@ -17,8 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Endpoint de comparaison multi-sites.
+ * Permet de comparer les KPIs carbone de plusieurs sites et identifie le meilleur/pire.
+ */
 @RestController
 @RequestMapping("/api/comparaison")
 @RequiredArgsConstructor
@@ -56,7 +61,35 @@ public class ComparaisonController {
                 .average()
                 .orElse(0));
 
-        return ResponseEntity.ok(new CompareResponse(kpis, co2TotalMoyen, co2ParM2Moyen, co2ParEmployeMoyen));
+        // Identifier meilleur et pire site par EC/m²
+        CompareResponse.SiteRanking meilleur = null;
+        CompareResponse.SiteRanking pire = null;
+
+        if (kpis.size() >= 2) {
+            KpiResponse best = kpis.stream()
+                    .min(Comparator.comparingDouble(KpiResponse::ecParM2))
+                    .orElse(null);
+            KpiResponse worst = kpis.stream()
+                    .max(Comparator.comparingDouble(KpiResponse::ecParM2))
+                    .orElse(null);
+
+            if (best != null) {
+                meilleur = new CompareResponse.SiteRanking(
+                        best.siteId(), best.siteNom(), best.ecParM2(),
+                        co2ParM2Moyen > 0 ? arrondir((best.ecParM2() - co2ParM2Moyen) / co2ParM2Moyen * 100) : 0.0
+                );
+            }
+            if (worst != null) {
+                pire = new CompareResponse.SiteRanking(
+                        worst.siteId(), worst.siteNom(), worst.ecParM2(),
+                        co2ParM2Moyen > 0 ? arrondir((worst.ecParM2() - co2ParM2Moyen) / co2ParM2Moyen * 100) : 0.0
+                );
+            }
+        }
+
+        return ResponseEntity.ok(new CompareResponse(
+                kpis, co2TotalMoyen, co2ParM2Moyen, co2ParEmployeMoyen, meilleur, pire
+        ));
     }
 
     private double arrondir(double value) {
